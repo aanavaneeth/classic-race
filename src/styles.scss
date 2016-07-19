@@ -40,7 +40,7 @@ body *{
 }
 
 @media (min-width: 650px) and (max-width: 1600px) {
-
+  font-size: calc(94px + (195 - 94) * ((100vw - 650px) / (1600 - 650)));
 }
 @media (min-width: 1600px) {
 
