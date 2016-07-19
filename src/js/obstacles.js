@@ -10,7 +10,7 @@ class Obstacles extends cjs.Container {
     constructor(speed) {
         super();
         this.speed = speed;
-
+        //lets hardcode initial positions for now.
         var ob1 = new Car();
         ob1.y = -300;
         ob1.x = 2 * dim;
@@ -71,7 +71,7 @@ class Obstacles extends cjs.Container {
         this.objs.forEach((obj, index) => {
             listeners.push(() => {
                 obj.y += this.speed.getSpeed();
-                if (obj.y > 840) {
+                if (obj.y > dimensions.canvasHeight) {
                     var position = this.getObstaclePosition(index + 1);
                     obj.y = position.y;
                     obj.x = position.x;
