@@ -2,7 +2,7 @@ let dim = 60;
 let lineThickness = 2.5;
 let backgroundEntityLength = 17;
 let backgroundEntityWidth = 10;
-
+//
 // let dim = 30;
 // let lineThickness = 1.5;
 // let backgroundEntityLength = 20;
