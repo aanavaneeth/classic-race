@@ -1,4 +1,3 @@
-
 let cjs = createjs;
 let Car = require('./car');
 let eventBus = require('./event-bus');
@@ -29,7 +28,7 @@ class Obstacles extends cjs.Container {
             this.addChild(child);
         });
         this.tickerListeners =  this.setTickerEventListeners();
-        this.playerPosition = 2 * dimensions.dim;
+        this.playerPosition = dimensions.initialPlayerPosition;
 
         eventBus.subscribe('start', () => {
             this.tickerListeners.map((listener)  => {
@@ -56,7 +55,7 @@ class Obstacles extends cjs.Container {
         var rand1or2 = (Math.floor(Math.random() * 2) + 1);
         var lastPos = (index > 1 ) ? index - 2 : 3;
         //Math.floor(Math.random()*(max-min+1)+min); max:
-        var yPos = this.objs[lastPos].y - ((Math.floor(Math.random() * 6) + 8) * dimensions.dim);
+        var yPos = this.objs[lastPos].y - ((Math.floor(Math.random() * 6) + 9) * dimensions.dim);
         return {
             x: (rand1or2 === 1) ? 2 * dimensions.dim : 5 * dimensions.dim,
             y: yPos
@@ -65,15 +64,20 @@ class Obstacles extends cjs.Container {
 
     setTickerEventListeners() {
         var listeners = [];
+        var carHeight = dimensions.dim * dimensions.carHeight;
         // is there a way to map?
         this.objs.forEach((obj, index) => {
             listeners.push(() => {
-                obj.y += this.speed.getSpeed();
+                if(obj.x ===  this.playerPosition.X && (obj.y + carHeight) >= this.playerPosition.Y) {
+                    eventBus.publish('end');
+                    return;
+                }
                 if (obj.y > dimensions.canvasHeight) {
                     var position = this.getObstaclePosition(index + 1);
                     obj.y = position.y;
                     obj.x = position.x;
                 }
+                obj.y += this.speed.getSpeed();
             });
         });
         return listeners;

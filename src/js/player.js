@@ -1,7 +1,3 @@
-/**
- * Created by navaneeth on 13-07-2016.
- */
-
 let doc = window.document;
 let dimensions = require('./dimensions-setup').getDimensions();
 let Car = require('./car');
@@ -11,8 +7,8 @@ class Player extends Car {
     constructor() {
         super();
         this.disableMovement = false;
-        this.y = ((dimensions.backgroundEntityLength -1) - dimensions.carHeight) * dimensions.dim; // player position
-        this.addKeyBoardEvent();
+        this.y = dimensions.initialPlayerPosition.Y;
+        this.addPlayerMovementEvents();
         eventBus.subscribe('pause', () => {
             this.disableMovement =  true;
         });
@@ -25,19 +21,33 @@ class Player extends Car {
         });
 
     }
-    addKeyBoardEvent() {
+    addPlayerMovementEvents() {
+        let midPointX = dimensions.offsetWidth/2;
         doc.addEventListener('keydown', (evt) => {
             if(!this.disableMovement) {
                 switch (evt.keyCode) {
                     case 37: //left arrow keycode
                         this.x = dimensions.dim * 2;
-                        eventBus.publish('playerPosition', this.x);
+                        eventBus.publish('playerPosition', {X: this.x, Y: this.y});
                         break;
                     case 39: //right arrow keycode
                         this.x = dimensions.dim * 5;
-                        eventBus.publish('playerPosition', this.x);
+                        eventBus.publish('playerPosition', {X: this.x, Y: this.y});
                 }
             }
+        });
+        doc.addEventListener('touchend', (evt) => {
+            evt.preventDefault();
+            let finalTouch = evt.changedTouches[evt.changedTouches.length - 1];
+            let X = finalTouch.pageX;
+            if(X <= midPointX) {
+                this.x = dimensions.dim * 2;
+                eventBus.publish('playerPosition', {X: this.x, Y: this.y});
+            } else if(X > midPointX) {
+                this.x = dimensions.dim * 5;
+                eventBus.publish('playerPosition', {X: this.x, Y: this.y});
+            }
+            return false;
         });
     }
 }

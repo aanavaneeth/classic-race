@@ -17,6 +17,8 @@ let setupDimensions = (offsetHeight, offsetWidth) => {
     dimensions.canvasHeight = dimensions.dim * (backgroundEntityLength - 1);
     dimensions.canvasWidth = dimensions.dim * (backgroundEntityWidth);
     dimensions.scoreBoardHeight = offsetHeight - dimensions.canvasHeight;  //need correction
+    dimensions.initialPlayerPosition = { X: dimensions.dim*2, Y: ((dimensions.backgroundEntityLength -1) - dimensions.carHeight) * dimensions.dim };
+    dimensions.offsetWidth = offsetWidth;
 };
 
 let getDimensions = () => {

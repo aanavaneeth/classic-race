@@ -1,4 +1,3 @@
-
 let topics = {};
 var callbackID = -1;
 

@@ -69,7 +69,7 @@ module.exports = {
       },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader!sass-loader"), exclude: /node_modules/},
       { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader"), exclude: /node_modules/},
-      { test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=10000000', exclude: /node_modules/ } // inline base64 URLs for <=8k images, direct URLs for the rest
+      { test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=10000000', exclude: /node_modules/ }
     ]
   },
   postcss: [ autoprefixer({ browsers: ['last 4 versions'] }) ]

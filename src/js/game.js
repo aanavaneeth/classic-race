@@ -1,4 +1,3 @@
-
 let cjs = createjs;
 let BackgroundEntity = require('./background');
 let Speed = require('./speed');

@@ -1,8 +1,5 @@
-/**
- * Created by navaneeth on 29-06-2016.
- */
-
 let win = window;
+let styles = require('../styles.scss');
 let Game = require('./game');
 let eventBus = require('./event-bus');
 let dimensions;
@@ -22,6 +19,11 @@ let setCanvasSize = (parent, stage) => {
     stage.canvas.height = dimensions.canvasHeight;
 };
 
+let touchAndStart = (evt) => {
+    evt.preventDefault();
+    eventBus.publish('start');
+};
+
 let handleEvents = (stage) => {
     const GAME_START = 0, GAME_RUNNING = 1, GAME_PAUSE = 2;
     let gameStatus = GAME_START;
@@ -30,8 +32,8 @@ let handleEvents = (stage) => {
         createjs.Touch.enable(stage);
     }
     setCanvasSize(parent, stage);
-    win.addEventListener('keypress',  (evt) => {
-        if(evt.keyCode === 32) {
+    win.addEventListener('keypress', (evt) => {
+        if (evt.keyCode === 32) {
             switch (gameStatus) {
                 case GAME_START:
                     eventBus.publish('start');
@@ -48,7 +50,10 @@ let handleEvents = (stage) => {
             }
         }
     });
-    createjs.Ticker.on("tick", () => {stage.update()} );
+    win.addEventListener('touchend', touchAndStart);
+    createjs.Ticker.on("tick", () => {
+        stage.update()
+    });
 };
 
 let setupGame = function (stage) {
@@ -61,7 +66,7 @@ var setupScoreboard = function (stage) {
     shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
     textContainer.addChild(shape);
     let text = new createjs.Text("Score 0000", "30px Aldrich", '#000');
-    text.x =  dimensions.canvasWidth/4;
+    text.x = dimensions.canvasWidth / 4;
     textContainer.addChild(text);
     stage.addChild(textContainer);
 };
@@ -79,6 +84,10 @@ let main = () => {
     eventBus.subscribe('end', () => {
         createjs.Ticker.removeAllEventListeners();
     });
+    eventBus.subscribe('start', () => {
+        win.removeEventListener('touchend', touchAndStart)
+    });
+
 };
 
 win.addEventListener("load", function () {
