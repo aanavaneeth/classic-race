@@ -53,7 +53,8 @@
 	var win = window;
 	var Game = __webpack_require__(1);
 	var eventBus = __webpack_require__(3);
-	var dimensions = __webpack_require__(4);
+	var dimensions = void 0;
+	var dimensionsSetup = __webpack_require__(4);
 
 	var setupEventsForCommunication = function setupEventsForCommunication() {
 	    eventBus.addTopic('start');
@@ -108,7 +109,7 @@
 	var setupScoreboard = function setupScoreboard(stage) {
 	    var textContainer = new createjs.Container();
 	    var shape = new createjs.Shape();
-	    shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, 40);
+	    shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
 	    textContainer.addChild(shape);
 	    var text = new createjs.Text("Score 0000", "30px Aldrich", '#000');
 	    text.x = dimensions.canvasWidth / 4;
@@ -116,8 +117,12 @@
 	    stage.addChild(textContainer);
 	};
 	var main = function main() {
+	    var offsetHeight = document.getElementById('canvas-container').offsetHeight;
+	    var offsetWidth = document.getElementById('canvas-container').offsetWidth;
 	    var stage = new createjs.Stage("myCanvas");
 	    setupEventsForCommunication();
+	    dimensionsSetup.setupDimensions(offsetHeight, offsetWidth);
+	    dimensions = dimensionsSetup.getDimensions();
 	    setupGame(stage);
 	    setupScoreboard(stage);
 	    createjs.Ticker.timingMode = createjs.Ticker.RAF;
@@ -148,8 +153,7 @@
 	var Speed = __webpack_require__(5);
 	var Player = __webpack_require__(6);
 	var Obstacles = __webpack_require__(8);
-	var dimensions = __webpack_require__(4);
-	var dim = dimensions.dim;
+	var dimensions = __webpack_require__(4).getDimensions();
 
 	var Game = function (_cjs$Container) {
 	    _inherits(Game, _cjs$Container);
@@ -159,11 +163,11 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Game).call(this));
 
-	        _this.speed = new Speed(45);
+	        _this.speed = new Speed(20);
 	        _this.backgroundQueue = [new BackgroundEntity(_this.speed), new BackgroundEntity(_this.speed)];
 	        _this.backgroundQueue[1].y = -_this.backgroundQueue[1].height;
 	        _this.player = new Player();
-	        _this.player.x = dim * 2;
+	        _this.player.x = dimensions.dim * 2;
 	        _this.addChild.apply(_this, _this.backgroundQueue);
 	        _this.addChild(new Obstacles(_this.speed));
 	        _this.addChild(_this.player);
@@ -191,12 +195,7 @@
 
 	var cjs = createjs;
 	var eventBus = __webpack_require__(3);
-	var dimensions = __webpack_require__(4);
-	var dim = dimensions.dim;
-	var lineThickness = dimensions.lineThickness;
-	var backgroundEntityLength = dimensions.backgroundEntityLength;
-	var backgroundEntityWidth = dimensions.backgroundEntityWidth;
-	var backgroundEntityPositionReset = dimensions.backgroundEntityPositionReset;
+	var dimensions = __webpack_require__(4).getDimensions();
 
 	var BackgroundEntity = function (_cjs$Container) {
 	    _inherits(BackgroundEntity, _cjs$Container);
@@ -226,24 +225,24 @@
 	    _createClass(BackgroundEntity, [{
 	        key: 'setup',
 	        value: function setup() {
-	            this.height = backgroundEntityLength * dim;
-	            for (var i = 0; i < backgroundEntityLength; i++) {
-	                for (var j = 0; j < backgroundEntityWidth; j++) {
+	            this.height = dimensions.backgroundEntityLength * dimensions.dim;
+	            for (var i = 0; i < dimensions.backgroundEntityLength; i++) {
+	                for (var j = 0; j < dimensions.backgroundEntityWidth; j++) {
 	                    if (i % 3 !== 0 && (j == 0 || j === 9)) {
-	                        this.outerRect.graphics.f("#020401").dr(dim * j, dim * i, dim, dim).s('#ADBDB0').ss(lineThickness, "square").mt(dim * j + lineThickness, dim * i + lineThickness).lt(dim * (j + 1) - lineThickness, dim * i + lineThickness).lt(dim * (j + 1) - lineThickness, dim * (i + 1) - lineThickness).lt(dim * j + lineThickness, dim * (i + 1) - lineThickness).lt(dim * j + lineThickness, dim * i + lineThickness).es();
+	                        this.outerRect.graphics.f("#020401").dr(dimensions.dim * j, dimensions.dim * i, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square").mt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness).lt(dimensions.dim * (j + 1) - dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness).lt(dimensions.dim * (j + 1) - dimensions.lineThickness, dimensions.dim * (i + 1) - dimensions.lineThickness).lt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * (i + 1) - dimensions.lineThickness).lt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness).es();
 	                    } else {
-	                        this.outerRect.graphics.f("#A2B2A5").dr(dim * j, dim * i, dim, dim).s('#ADBDB0').ss(lineThickness, "square").mt(dim * j + lineThickness, dim * i + lineThickness).lt(dim * (j + 1) - lineThickness, dim * i + lineThickness).lt(dim * (j + 1) - lineThickness, dim * (i + 1) - lineThickness).lt(dim * j + lineThickness, dim * (i + 1) - lineThickness).lt(dim * j + lineThickness, dim * i + lineThickness).es();
+	                        this.outerRect.graphics.f("#A2B2A5").dr(dimensions.dim * j, dimensions.dim * i, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square").mt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness).lt(dimensions.dim * (j + 1) - dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness).lt(dimensions.dim * (j + 1) - dimensions.lineThickness, dimensions.dim * (i + 1) - dimensions.lineThickness).lt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * (i + 1) - dimensions.lineThickness).lt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness).es();
 	                    }
 	                }
 	            }
-	            this.outerRect.cache(0, 0, backgroundEntityWidth * dim, this.height);
+	            this.outerRect.cache(0, 0, dimensions.backgroundEntityWidth * dimensions.dim, this.height);
 	            this.addChild(this.outerRect);
 	        }
 	    }, {
 	        key: 'eventListener',
 	        value: function eventListener() {
-	            if (this.y >= backgroundEntityPositionReset) {
-	                this.y = -this.height + (this.y - backgroundEntityPositionReset);
+	            if (this.y >= dimensions.backgroundEntityPositionReset) {
+	                this.y = -this.height + (this.y - dimensions.backgroundEntityPositionReset);
 	            }
 	            this.y += this.speed.getSpeed();
 	        }
@@ -327,30 +326,34 @@
 
 	"use strict";
 
-	var dim = 60;
-	var lineThickness = 2.5;
-	var backgroundEntityLength = 17;
-	var backgroundEntityWidth = 10;
-	//
-	// let dim = 30;
-	// let lineThickness = 1.5;
-	// let backgroundEntityLength = 20;
-	// let backgroundEntityWidth = 10;
-
 	var carHeight = 4;
-	var backgroundEntityPositionReset = dim * backgroundEntityLength;
-	var canvasHeight = dim * (backgroundEntityLength - 1);
-	var canvasWidth = dim * backgroundEntityWidth;
+	var backgroundEntityLength = 18;
+	var backgroundEntityWidth = 10;
+	var dimensions = {
+	    backgroundEntityLength: backgroundEntityLength,
+	    backgroundEntityWidth: backgroundEntityWidth,
+	    carHeight: carHeight
+	};
+
+	var setupDimensions = function setupDimensions(offsetHeight, offsetWidth) {
+	    var boxDimByOffsetHeight = offsetHeight / (backgroundEntityLength + 1);
+	    var boxDimByOffsetWidth = offsetWidth / backgroundEntityWidth;
+
+	    dimensions.dim = Math.min(boxDimByOffsetHeight, boxDimByOffsetWidth);
+	    dimensions.lineThickness = dimensions.dim / 20;
+	    dimensions.backgroundEntityPositionReset = dimensions.dim * backgroundEntityLength;
+	    dimensions.canvasHeight = dimensions.dim * (backgroundEntityLength - 1);
+	    dimensions.canvasWidth = dimensions.dim * backgroundEntityWidth;
+	    dimensions.scoreBoardHeight = offsetHeight - dimensions.canvasHeight; //need correction
+	};
+
+	var getDimensions = function getDimensions() {
+	    return dimensions;
+	};
 
 	module.exports = {
-	  dim: dim,
-	  lineThickness: lineThickness,
-	  backgroundEntityLength: backgroundEntityLength,
-	  backgroundEntityWidth: backgroundEntityWidth,
-	  backgroundEntityPositionReset: backgroundEntityPositionReset,
-	  canvasHeight: canvasHeight,
-	  canvasWidth: canvasWidth,
-	  carHeight: carHeight
+	    setupDimensions: setupDimensions,
+	    getDimensions: getDimensions
 	};
 
 /***/ },
@@ -390,12 +393,9 @@
 	 */
 
 	var doc = window.document;
-	var dimensions = __webpack_require__(4);
+	var dimensions = __webpack_require__(4).getDimensions();
 	var Car = __webpack_require__(7);
 	var eventBus = __webpack_require__(3);
-
-	var dim = dimensions.dim;
-	var playerPosition = (dimensions.backgroundEntityLength - 1 - dimensions.carHeight) * dim;
 
 	var Player = function (_Car) {
 	    _inherits(Player, _Car);
@@ -406,7 +406,7 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Player).call(this));
 
 	        _this.disableMovement = false;
-	        _this.y = playerPosition;
+	        _this.y = (dimensions.backgroundEntityLength - 1 - dimensions.carHeight) * dimensions.dim; // player position
 	        _this.addKeyBoardEvent();
 	        eventBus.subscribe('pause', function () {
 	            _this.disableMovement = true;
@@ -432,12 +432,12 @@
 	                    switch (evt.keyCode) {
 	                        case 37:
 	                            //left arrow keycode
-	                            _this2.x = dim * 2;
+	                            _this2.x = dimensions.dim * 2;
 	                            eventBus.publish('playerPosition', _this2.x);
 	                            break;
 	                        case 39:
 	                            //right arrow keycode
-	                            _this2.x = dim * 5;
+	                            _this2.x = dimensions.dim * 5;
 	                            eventBus.publish('playerPosition', _this2.x);
 	                    }
 	                }
@@ -463,9 +463,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var cjs = createjs;
-	var dimensions = __webpack_require__(4);
-	var dim = dimensions.dim;
-	var lineThickness = dimensions.lineThickness;
+	var dimensions = __webpack_require__(4).getDimensions();
 
 	var Car = function (_cjs$Container) {
 	    _inherits(Car, _cjs$Container);
@@ -476,8 +474,8 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Car).call(this));
 
 	        _this.outerRect = new cjs.Shape();
-	        _this.outerRect.graphics.f("#020401").dr(dim, 0, dim, dim).s('#ADBDB0').ss(lineThickness, "square").mt(dim + lineThickness, lineThickness).lt(dim * 2 - lineThickness, lineThickness).lt(dim * 2 - lineThickness, dim - lineThickness).lt(dim + lineThickness, dim - lineThickness).lt(dim + lineThickness, lineThickness).es().dr(0, dim, dim, dim).s('#ADBDB0').ss(lineThickness, "square").mt(lineThickness, dim + lineThickness).lt(dim - lineThickness, dim + lineThickness).lt(dim - lineThickness, 2 * dim - lineThickness).lt(lineThickness, 2 * dim - lineThickness).lt(lineThickness, dim + lineThickness).es().dr(dim, dim, dim, dim).s('#ADBDB0').ss(lineThickness, "square").mt(dim + lineThickness, dim + lineThickness).lt(dim * 2 - lineThickness, dim + lineThickness).lt(dim * 2 - lineThickness, 2 * dim - lineThickness).lt(dim + lineThickness, 2 * dim - lineThickness).lt(dim + lineThickness, dim + lineThickness).es().dr(2 * dim, dim, dim, dim).s('#ADBDB0').ss(lineThickness, "square").mt(2 * dim + lineThickness, dim + lineThickness).lt(dim * 3 - lineThickness, dim + lineThickness).lt(dim * 3 - lineThickness, 2 * dim - lineThickness).lt(2 * dim + lineThickness, 2 * dim - lineThickness).lt(2 * dim + lineThickness, dim + lineThickness).es().dr(dim, 2 * dim, dim, dim).s('#ADBDB0').ss(4, "square").mt(dim + lineThickness, 2 * dim + lineThickness).lt(dim * 2 - lineThickness, 2 * dim + lineThickness).lt(dim * 2 - lineThickness, 3 * dim - lineThickness).lt(dim + lineThickness, 3 * dim - lineThickness).lt(dim + lineThickness, 2 * dim + lineThickness).es().dr(0, 3 * dim, dim, dim).s('#ADBDB0').ss(lineThickness, "square").mt(lineThickness, 3 * dim + lineThickness).lt(dim - lineThickness, 3 * dim + lineThickness).lt(dim - lineThickness, 4 * dim - lineThickness).lt(lineThickness, 4 * dim - lineThickness).lt(lineThickness, 3 * dim + lineThickness).es().dr(2 * dim, 3 * dim, dim, dim).s('#ADBDB0').ss(lineThickness, "square").mt(2 * dim + lineThickness, 3 * dim + lineThickness).lt(3 * dim - lineThickness, 3 * dim + lineThickness).lt(3 * dim - lineThickness, 4 * dim - lineThickness).lt(2 * dim + lineThickness, 4 * dim - lineThickness).lt(2 * dim + lineThickness, 3 * dim + lineThickness).es();
-	        _this.outerRect.cache(0, 0, 3 * dim, 4 * dim);
+	        _this.outerRect.graphics.f("#020401").dr(dimensions.dim, 0, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square").mt(dimensions.dim + dimensions.lineThickness, dimensions.lineThickness).lt(dimensions.dim * 2 - dimensions.lineThickness, dimensions.lineThickness).lt(dimensions.dim * 2 - dimensions.lineThickness, dimensions.dim - dimensions.lineThickness).lt(dimensions.dim + dimensions.lineThickness, dimensions.dim - dimensions.lineThickness).lt(dimensions.dim + dimensions.lineThickness, dimensions.lineThickness).es().dr(0, dimensions.dim, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square").mt(dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).lt(dimensions.dim - dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).lt(dimensions.dim - dimensions.lineThickness, 2 * dimensions.dim - dimensions.lineThickness).lt(dimensions.lineThickness, 2 * dimensions.dim - dimensions.lineThickness).lt(dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).es().dr(dimensions.dim, dimensions.dim, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square").mt(dimensions.dim + dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).lt(dimensions.dim * 2 - dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).lt(dimensions.dim * 2 - dimensions.lineThickness, 2 * dimensions.dim - dimensions.lineThickness).lt(dimensions.dim + dimensions.lineThickness, 2 * dimensions.dim - dimensions.lineThickness).lt(dimensions.dim + dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).es().dr(2 * dimensions.dim, dimensions.dim, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square").mt(2 * dimensions.dim + dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).lt(dimensions.dim * 3 - dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).lt(dimensions.dim * 3 - dimensions.lineThickness, 2 * dimensions.dim - dimensions.lineThickness).lt(2 * dimensions.dim + dimensions.lineThickness, 2 * dimensions.dim - dimensions.lineThickness).lt(2 * dimensions.dim + dimensions.lineThickness, dimensions.dim + dimensions.lineThickness).es().dr(dimensions.dim, 2 * dimensions.dim, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(4, "square").mt(dimensions.dim + dimensions.lineThickness, 2 * dimensions.dim + dimensions.lineThickness).lt(dimensions.dim * 2 - dimensions.lineThickness, 2 * dimensions.dim + dimensions.lineThickness).lt(dimensions.dim * 2 - dimensions.lineThickness, 3 * dimensions.dim - dimensions.lineThickness).lt(dimensions.dim + dimensions.lineThickness, 3 * dimensions.dim - dimensions.lineThickness).lt(dimensions.dim + dimensions.lineThickness, 2 * dimensions.dim + dimensions.lineThickness).es().dr(0, 3 * dimensions.dim, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square").mt(dimensions.lineThickness, 3 * dimensions.dim + dimensions.lineThickness).lt(dimensions.dim - dimensions.lineThickness, 3 * dimensions.dim + dimensions.lineThickness).lt(dimensions.dim - dimensions.lineThickness, 4 * dimensions.dim - dimensions.lineThickness).lt(dimensions.lineThickness, 4 * dimensions.dim - dimensions.lineThickness).lt(dimensions.lineThickness, 3 * dimensions.dim + dimensions.lineThickness).es().dr(2 * dimensions.dim, 3 * dimensions.dim, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square").mt(2 * dimensions.dim + dimensions.lineThickness, 3 * dimensions.dim + dimensions.lineThickness).lt(3 * dimensions.dim - dimensions.lineThickness, 3 * dimensions.dim + dimensions.lineThickness).lt(3 * dimensions.dim - dimensions.lineThickness, 4 * dimensions.dim - dimensions.lineThickness).lt(2 * dimensions.dim + dimensions.lineThickness, 4 * dimensions.dim - dimensions.lineThickness).lt(2 * dimensions.dim + dimensions.lineThickness, 3 * dimensions.dim + dimensions.lineThickness).es();
+	        _this.outerRect.cache(0, 0, 3 * dimensions.dim, 4 * dimensions.dim);
 
 	        _this.addChild(_this.outerRect);
 
@@ -506,8 +504,7 @@
 	var cjs = createjs;
 	var Car = __webpack_require__(7);
 	var eventBus = __webpack_require__(3);
-	var dimensions = __webpack_require__(4);
-	var dim = dimensions.dim;
+	var dimensions = __webpack_require__(4).getDimensions();
 
 	var Obstacles = function (_cjs$Container) {
 	    _inherits(Obstacles, _cjs$Container);
@@ -518,28 +515,28 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Obstacles).call(this));
 
 	        _this.speed = speed;
-
+	        //lets hardcode initial positions for now.
 	        var ob1 = new Car();
 	        ob1.y = -300;
-	        ob1.x = 2 * dim;
+	        ob1.x = 2 * dimensions.dim;
 
 	        var ob2 = new Car();
 	        ob2.y = -800;
-	        ob2.x = 5 * dim;
+	        ob2.x = 5 * dimensions.dim;
 
 	        var ob3 = new Car();
 	        ob3.y = -1200;
-	        ob3.x = 2 * dim;
+	        ob3.x = 2 * dimensions.dim;
 
 	        var ob4 = new Car();
 	        ob4.y = -1800;
-	        ob4.x = 5 * dim;
+	        ob4.x = 5 * dimensions.dim;
 	        _this.objs = [ob1, ob2, ob3, ob4];
 	        _this.objs.forEach(function (child) {
 	            _this.addChild(child);
 	        });
 	        _this.tickerListeners = _this.setTickerEventListeners();
-	        _this.playerPosition = 2 * dim;
+	        _this.playerPosition = 2 * dimensions.dim;
 
 	        eventBus.subscribe('start', function () {
 	            _this.tickerListeners.map(function (listener) {
@@ -569,9 +566,9 @@
 	            var rand1or2 = Math.floor(Math.random() * 2) + 1;
 	            var lastPos = index > 1 ? index - 2 : 3;
 	            //Math.floor(Math.random()*(max-min+1)+min); max:
-	            var yPos = this.objs[lastPos].y - (Math.floor(Math.random() * 6) + 8) * dim;
+	            var yPos = this.objs[lastPos].y - (Math.floor(Math.random() * 6) + 8) * dimensions.dim;
 	            return {
-	                x: rand1or2 === 1 ? 2 * dim : 5 * dim,
+	                x: rand1or2 === 1 ? 2 * dimensions.dim : 5 * dimensions.dim,
 	                y: yPos
 	            };
 	        }
