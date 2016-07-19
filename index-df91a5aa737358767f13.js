@@ -119,6 +119,33 @@
 	    textContainer.addChild(text);
 	    stage.addChild(textContainer);
 	};
+
+	var hideBanners = function hideBanners() {
+	    for (var _len = arguments.length, cssClasses = Array(_len), _key = 0; _key < _len; _key++) {
+	        cssClasses[_key] = arguments[_key];
+	    }
+
+	    var selector = cssClasses.map(function (cssClass) {
+	        return '.' + cssClass + ' ';
+	    }).join(',');
+	    Array.prototype.forEach.call(win.document.querySelectorAll(selector), function (ele) {
+	        ele.classList.add('hide-banner');
+	    });
+	};
+
+	var showBanners = function showBanners() {
+	    for (var _len2 = arguments.length, cssClasses = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	        cssClasses[_key2] = arguments[_key2];
+	    }
+
+	    var selector = cssClasses.map(function (cssClass) {
+	        return '.' + cssClass + ' ';
+	    }).join(',');
+	    Array.prototype.forEach.call(win.document.querySelectorAll(selector), function (ele) {
+	        ele.classList.remove('hide-banner');
+	    });
+	};
+
 	var main = function main() {
 	    var offsetHeight = document.getElementById('canvas-container').offsetHeight;
 	    var offsetWidth = document.getElementById('canvas-container').offsetWidth;
@@ -130,11 +157,27 @@
 	    setupScoreboard(stage);
 	    createjs.Ticker.timingMode = createjs.Ticker.RAF;
 	    handleEvents(stage);
+
 	    eventBus.subscribe('end', function () {
+	        hideBanners('start', 'pause');
+	        showBanners('end', 'banner');
 	        createjs.Ticker.removeAllEventListeners();
+	        stage.removeAllChildren();
+	        var game = new Game();
+	        stage.addChild(game);
 	    });
 	    eventBus.subscribe('start', function () {
+	        hideBanners('start', 'pause', 'end', 'banner');
 	        win.removeEventListener('touchend', touchAndStart);
+	    });
+
+	    eventBus.subscribe('pause', function () {
+	        hideBanners('start', 'end');
+	        showBanners('pause', 'banner');
+	    });
+
+	    eventBus.subscribe('continue', function () {
+	        hideBanners('start', 'pause', 'end', 'banner');
 	    });
 	};
 
@@ -175,7 +218,7 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Game).call(this));
 
-	        _this.speed = new Speed(20);
+	        _this.speed = new Speed(dimensions.dim * 0.25);
 	        _this.backgroundQueue = [new BackgroundEntity(_this.speed), new BackgroundEntity(_this.speed)];
 	        _this.backgroundQueue[1].y = -_this.backgroundQueue[1].height;
 	        _this.player = new Player();
@@ -539,21 +582,20 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Obstacles).call(this));
 
 	        _this.speed = speed;
-	        //lets hardcode initial positions for now.
 	        var ob1 = new Car();
-	        ob1.y = -300;
+	        ob1.y = -(dimensions.dim * 3);
 	        ob1.x = 2 * dimensions.dim;
 
 	        var ob2 = new Car();
-	        ob2.y = -800;
+	        ob2.y = -(dimensions.dim * 13);
 	        ob2.x = 5 * dimensions.dim;
 
 	        var ob3 = new Car();
-	        ob3.y = -1200;
+	        ob3.y = -(dimensions.dim * 23);
 	        ob3.x = 2 * dimensions.dim;
 
 	        var ob4 = new Car();
-	        ob4.y = -1800;
+	        ob4.y = -(dimensions.dim * 35);
 	        ob4.x = 5 * dimensions.dim;
 	        _this.objs = [ob1, ob2, ob3, ob4];
 	        _this.objs.forEach(function (child) {
@@ -590,7 +632,7 @@
 	            var rand1or2 = Math.floor(Math.random() * 2) + 1;
 	            var lastPos = index > 1 ? index - 2 : 3;
 	            //Math.floor(Math.random()*(max-min+1)+min); max:
-	            var yPos = this.objs[lastPos].y - (Math.floor(Math.random() * 6) + 9) * dimensions.dim;
+	            var yPos = this.objs[lastPos].y - (Math.floor(Math.random() * 4) + 10) * dimensions.dim;
 	            return {
 	                x: rand1or2 === 1 ? 2 * dimensions.dim : 5 * dimensions.dim,
 	                y: yPos
