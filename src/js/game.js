@@ -9,7 +9,7 @@ let dimensions = require('./dimensions-setup').getDimensions();
 class Game extends cjs.Container {
     constructor() {
         super();
-        this.speed = new Speed(20);
+        this.speed = new Speed(dimensions.dim * 0.25);
         this.backgroundQueue = [new BackgroundEntity(this.speed), new BackgroundEntity(this.speed)];
         this.backgroundQueue[1].y = -(this.backgroundQueue[1].height);
         this.player = new Player();

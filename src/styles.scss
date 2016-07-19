@@ -5,21 +5,25 @@
   src: url('./lib/aldrich.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 }
+
 html {
   height: 100%;
 }
+
 body {
   padding: 0;
   margin: 0;
   overflow: hidden;
   height: 100vh;
 }
-body *{
+
+body * {
   box-sizing: border-box;
   margin: 0;
   border: 0;
   padding: 0;
 }
+
 #canvas-container {
   width: 100vw;
   height: 100vh;
@@ -32,16 +36,38 @@ body *{
 .banner {
   position: absolute;
   width: 100vw;
-  height: 30vh;
+  height: 40vh;
+  top: 35vh;
+  left: 0;
+  background: #A0BCA5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Aldrich;
+  text-align: center;
+  }
+
+.hide-banner {
+  top: -400000px;
+  position: absolute;
 }
 
-.banner-hide {
-
+@media (min-width: 275px) and (max-width: 1080px) {
+  .banner {
+    font-size: calc(20px + (80 - 20) * ((100vw - 275px) / (1080 - 275)));
+    height: 30vh;
+  }
 }
 
-@media (min-width: 650px) and (max-width: 1600px) {
-  font-size: calc(94px + (195 - 94) * ((100vw - 650px) / (1600 - 650)));
+@media (min-width: 1080px) and (max-width: 1900px) {
+  .banner {
+    font-size: calc(80px + (100 - 80) * ((100vw - 1080px) / (1900 - 1080)));
+    height: 40vh;
+  }
 }
-@media (min-width: 1600px) {
 
+@media (min-width: 1900px) {
+  .banner {
+    font-size: 100px;
+  }
 }

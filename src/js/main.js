@@ -70,6 +70,25 @@ var setupScoreboard = function (stage) {
     textContainer.addChild(text);
     stage.addChild(textContainer);
 };
+
+let hideBanners = (...cssClasses) => {
+    var selector = cssClasses.map((cssClass) => {
+        return `.${cssClass} `;
+    }). join(',');
+    Array.prototype.forEach.call(win.document.querySelectorAll(selector), (ele) => {
+        ele.classList.add('hide-banner')
+    });
+};
+
+let showBanners = (...cssClasses) => {
+    var selector = cssClasses.map((cssClass) => {
+        return `.${cssClass} `;
+    }). join(',');
+    Array.prototype.forEach.call(win.document.querySelectorAll(selector), (ele) => {
+        ele.classList.remove('hide-banner')
+    });
+};
+
 let main = () => {
     let offsetHeight = document.getElementById('canvas-container').offsetHeight;
     let offsetWidth = document.getElementById('canvas-container').offsetWidth;
@@ -81,12 +100,29 @@ let main = () => {
     setupScoreboard(stage);
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     handleEvents(stage);
+
     eventBus.subscribe('end', () => {
+        hideBanners('start', 'pause');
+        showBanners('end', 'banner');
         createjs.Ticker.removeAllEventListeners();
+        stage.removeAllChildren();
+        let game = new Game();
+        stage.addChild(game);
     });
     eventBus.subscribe('start', () => {
+        hideBanners('start', 'pause', 'end', 'banner');
         win.removeEventListener('touchend', touchAndStart)
     });
+
+    eventBus.subscribe('pause', () => {
+        hideBanners('start', 'end');
+        showBanners('pause', 'banner');
+    });
+
+    eventBus.subscribe('continue', () => {
+        hideBanners('start', 'pause', 'end', 'banner');
+    });
+
 
 };
 
