@@ -46,15 +46,12 @@
 
 	'use strict';
 
-	/**
-	 * Created by navaneeth on 29-06-2016.
-	 */
-
 	var win = window;
-	var Game = __webpack_require__(1);
-	var eventBus = __webpack_require__(3);
+	var styles = __webpack_require__(1);
+	var Game = __webpack_require__(2);
+	var eventBus = __webpack_require__(4);
 	var dimensions = void 0;
-	var dimensionsSetup = __webpack_require__(4);
+	var dimensionsSetup = __webpack_require__(5);
 
 	var setupEventsForCommunication = function setupEventsForCommunication() {
 	    eventBus.addTopic('start');
@@ -67,6 +64,11 @@
 	var setCanvasSize = function setCanvasSize(parent, stage) {
 	    stage.canvas.width = dimensions.canvasWidth;
 	    stage.canvas.height = dimensions.canvasHeight;
+	};
+
+	var touchAndStart = function touchAndStart(evt) {
+	    evt.preventDefault();
+	    eventBus.publish('start');
 	};
 
 	var handleEvents = function handleEvents(stage) {
@@ -97,6 +99,7 @@
 	            }
 	        }
 	    });
+	    win.addEventListener('touchend', touchAndStart);
 	    createjs.Ticker.on("tick", function () {
 	        stage.update();
 	    });
@@ -130,6 +133,9 @@
 	    eventBus.subscribe('end', function () {
 	        createjs.Ticker.removeAllEventListeners();
 	    });
+	    eventBus.subscribe('start', function () {
+	        win.removeEventListener('touchend', touchAndStart);
+	    });
 	};
 
 	win.addEventListener("load", function () {
@@ -138,6 +144,12 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -149,11 +161,11 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var cjs = createjs;
-	var BackgroundEntity = __webpack_require__(2);
-	var Speed = __webpack_require__(5);
-	var Player = __webpack_require__(6);
-	var Obstacles = __webpack_require__(8);
-	var dimensions = __webpack_require__(4).getDimensions();
+	var BackgroundEntity = __webpack_require__(3);
+	var Speed = __webpack_require__(6);
+	var Player = __webpack_require__(7);
+	var Obstacles = __webpack_require__(9);
+	var dimensions = __webpack_require__(5).getDimensions();
 
 	var Game = function (_cjs$Container) {
 	    _inherits(Game, _cjs$Container);
@@ -180,7 +192,7 @@
 	module.exports = Game;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -194,8 +206,8 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var cjs = createjs;
-	var eventBus = __webpack_require__(3);
-	var dimensions = __webpack_require__(4).getDimensions();
+	var eventBus = __webpack_require__(4);
+	var dimensions = __webpack_require__(5).getDimensions();
 
 	var BackgroundEntity = function (_cjs$Container) {
 	    _inherits(BackgroundEntity, _cjs$Container);
@@ -254,7 +266,7 @@
 	module.exports = BackgroundEntity;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -321,7 +333,7 @@
 	};
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -345,6 +357,8 @@
 	    dimensions.canvasHeight = dimensions.dim * (backgroundEntityLength - 1);
 	    dimensions.canvasWidth = dimensions.dim * backgroundEntityWidth;
 	    dimensions.scoreBoardHeight = offsetHeight - dimensions.canvasHeight; //need correction
+	    dimensions.initialPlayerPosition = { X: dimensions.dim * 2, Y: (dimensions.backgroundEntityLength - 1 - dimensions.carHeight) * dimensions.dim };
+	    dimensions.offsetWidth = offsetWidth;
 	};
 
 	var getDimensions = function getDimensions() {
@@ -357,7 +371,7 @@
 	};
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -375,7 +389,7 @@
 	};
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -388,14 +402,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	/**
-	 * Created by navaneeth on 13-07-2016.
-	 */
-
 	var doc = window.document;
-	var dimensions = __webpack_require__(4).getDimensions();
-	var Car = __webpack_require__(7);
-	var eventBus = __webpack_require__(3);
+	var dimensions = __webpack_require__(5).getDimensions();
+	var Car = __webpack_require__(8);
+	var eventBus = __webpack_require__(4);
 
 	var Player = function (_Car) {
 	    _inherits(Player, _Car);
@@ -406,8 +416,8 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Player).call(this));
 
 	        _this.disableMovement = false;
-	        _this.y = (dimensions.backgroundEntityLength - 1 - dimensions.carHeight) * dimensions.dim; // player position
-	        _this.addKeyBoardEvent();
+	        _this.y = dimensions.initialPlayerPosition.Y;
+	        _this.addPlayerMovementEvents();
 	        eventBus.subscribe('pause', function () {
 	            _this.disableMovement = true;
 	        });
@@ -423,24 +433,38 @@
 	    }
 
 	    _createClass(Player, [{
-	        key: 'addKeyBoardEvent',
-	        value: function addKeyBoardEvent() {
+	        key: 'addPlayerMovementEvents',
+	        value: function addPlayerMovementEvents() {
 	            var _this2 = this;
 
+	            var midPointX = dimensions.offsetWidth / 2;
 	            doc.addEventListener('keydown', function (evt) {
 	                if (!_this2.disableMovement) {
 	                    switch (evt.keyCode) {
 	                        case 37:
 	                            //left arrow keycode
 	                            _this2.x = dimensions.dim * 2;
-	                            eventBus.publish('playerPosition', _this2.x);
+	                            eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
 	                            break;
 	                        case 39:
 	                            //right arrow keycode
 	                            _this2.x = dimensions.dim * 5;
-	                            eventBus.publish('playerPosition', _this2.x);
+	                            eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
 	                    }
 	                }
+	            });
+	            doc.addEventListener('touchend', function (evt) {
+	                evt.preventDefault();
+	                var finalTouch = evt.changedTouches[evt.changedTouches.length - 1];
+	                var X = finalTouch.pageX;
+	                if (X <= midPointX) {
+	                    _this2.x = dimensions.dim * 2;
+	                    eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
+	                } else if (X > midPointX) {
+	                    _this2.x = dimensions.dim * 5;
+	                    eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
+	                }
+	                return false;
 	            });
 	        }
 	    }]);
@@ -451,7 +475,7 @@
 	module.exports = Player;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -463,7 +487,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var cjs = createjs;
-	var dimensions = __webpack_require__(4).getDimensions();
+	var dimensions = __webpack_require__(5).getDimensions();
 
 	var Car = function (_cjs$Container) {
 	    _inherits(Car, _cjs$Container);
@@ -488,7 +512,7 @@
 	module.exports = Car;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -502,9 +526,9 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var cjs = createjs;
-	var Car = __webpack_require__(7);
-	var eventBus = __webpack_require__(3);
-	var dimensions = __webpack_require__(4).getDimensions();
+	var Car = __webpack_require__(8);
+	var eventBus = __webpack_require__(4);
+	var dimensions = __webpack_require__(5).getDimensions();
 
 	var Obstacles = function (_cjs$Container) {
 	    _inherits(Obstacles, _cjs$Container);
@@ -536,7 +560,7 @@
 	            _this.addChild(child);
 	        });
 	        _this.tickerListeners = _this.setTickerEventListeners();
-	        _this.playerPosition = 2 * dimensions.dim;
+	        _this.playerPosition = dimensions.initialPlayerPosition;
 
 	        eventBus.subscribe('start', function () {
 	            _this.tickerListeners.map(function (listener) {
@@ -566,7 +590,7 @@
 	            var rand1or2 = Math.floor(Math.random() * 2) + 1;
 	            var lastPos = index > 1 ? index - 2 : 3;
 	            //Math.floor(Math.random()*(max-min+1)+min); max:
-	            var yPos = this.objs[lastPos].y - (Math.floor(Math.random() * 6) + 8) * dimensions.dim;
+	            var yPos = this.objs[lastPos].y - (Math.floor(Math.random() * 6) + 9) * dimensions.dim;
 	            return {
 	                x: rand1or2 === 1 ? 2 * dimensions.dim : 5 * dimensions.dim,
 	                y: yPos
@@ -578,15 +602,20 @@
 	            var _this2 = this;
 
 	            var listeners = [];
+	            var carHeight = dimensions.dim * dimensions.carHeight;
 	            // is there a way to map?
 	            this.objs.forEach(function (obj, index) {
 	                listeners.push(function () {
-	                    obj.y += _this2.speed.getSpeed();
+	                    if (obj.x === _this2.playerPosition.X && obj.y + carHeight >= _this2.playerPosition.Y) {
+	                        eventBus.publish('end');
+	                        return;
+	                    }
 	                    if (obj.y > dimensions.canvasHeight) {
 	                        var position = _this2.getObstaclePosition(index + 1);
 	                        obj.y = position.y;
 	                        obj.x = position.x;
 	                    }
+	                    obj.y += _this2.speed.getSpeed();
 	                });
 	            });
 	            return listeners;
