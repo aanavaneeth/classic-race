@@ -1,12 +1,6 @@
 let cjs = createjs;
 let eventBus = require('./event-bus');
-let dimensions = require('./dimensions-setup');
-let dim = dimensions.dim;
-let lineThickness = dimensions.lineThickness;
-let backgroundEntityLength = dimensions.backgroundEntityLength;
-let backgroundEntityWidth = dimensions.backgroundEntityWidth;
-let backgroundEntityPositionReset = dimensions.backgroundEntityPositionReset;
-
+let dimensions = require('./dimensions-setup').getDimensions();
 class BackgroundEntity extends cjs.Container {
     constructor(speed) {
         super();
@@ -27,35 +21,35 @@ class BackgroundEntity extends cjs.Container {
     }
 
     setup() {
-        this.height = backgroundEntityLength * dim;
-        for (let i = 0; i < backgroundEntityLength; i++) {
-            for (let j = 0; j < backgroundEntityWidth; j++) {
+        this.height = dimensions.backgroundEntityLength * dimensions.dim;
+        for (let i = 0; i < dimensions.backgroundEntityLength; i++) {
+            for (let j = 0; j < dimensions.backgroundEntityWidth; j++) {
                 if (( i % 3 !== 0 ) && (( j == 0) || (j === 9))) {
                     this.outerRect.graphics.f("#020401")
-                        .dr(dim * j, dim * i, dim, dim).s('#ADBDB0').ss(lineThickness, "square")
-                        .mt(dim * j + lineThickness, dim * i + lineThickness)
-                        .lt((dim * (j + 1)) - lineThickness, dim * i + lineThickness)
-                        .lt((dim * (j + 1) ) - lineThickness, dim * (i + 1) - lineThickness)
-                        .lt(dim * j + lineThickness, dim * (i + 1) - lineThickness)
-                        .lt(dim * j + lineThickness, dim * i + lineThickness).es();
+                        .dr(dimensions.dim * j, dimensions.dim * i, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square")
+                        .mt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness)
+                        .lt((dimensions.dim * (j + 1)) - dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness)
+                        .lt((dimensions.dim * (j + 1) ) - dimensions.lineThickness, dimensions.dim * (i + 1) - dimensions.lineThickness)
+                        .lt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * (i + 1) - dimensions.lineThickness)
+                        .lt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness).es();
                 } else {
                     this.outerRect.graphics.f("#A2B2A5")
-                        .dr(dim * j, dim * i, dim, dim).s('#ADBDB0').ss(lineThickness, "square")
-                        .mt(dim * j + lineThickness, dim * i + lineThickness)
-                        .lt((dim * (j + 1)) - lineThickness, dim * i + lineThickness)
-                        .lt((dim * (j + 1) ) - lineThickness, dim * (i + 1) - lineThickness)
-                        .lt(dim * j + lineThickness, dim * (i + 1) - lineThickness)
-                        .lt(dim * j + lineThickness, dim * i + lineThickness).es();
+                        .dr(dimensions.dim * j, dimensions.dim * i, dimensions.dim, dimensions.dim).s('#ADBDB0').ss(dimensions.lineThickness, "square")
+                        .mt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness)
+                        .lt((dimensions.dim * (j + 1)) - dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness)
+                        .lt((dimensions.dim * (j + 1) ) - dimensions.lineThickness, dimensions.dim * (i + 1) - dimensions.lineThickness)
+                        .lt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * (i + 1) - dimensions.lineThickness)
+                        .lt(dimensions.dim * j + dimensions.lineThickness, dimensions.dim * i + dimensions.lineThickness).es();
                 }
             }
         }
-        this.outerRect.cache(0,0, backgroundEntityWidth*dim, this.height);
+        this.outerRect.cache(0,0, dimensions.backgroundEntityWidth*dimensions.dim, this.height);
         this.addChild(this.outerRect);
     }
 
     eventListener() {
-          if (this.y >= backgroundEntityPositionReset) {
-            this.y = -(this.height) + (this.y - backgroundEntityPositionReset);
+          if (this.y >= dimensions.backgroundEntityPositionReset) {
+            this.y = -(this.height) + (this.y - dimensions.backgroundEntityPositionReset);
         }
         this.y += this.speed.getSpeed();
     }

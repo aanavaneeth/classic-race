@@ -3,19 +3,15 @@
  */
 
 let doc = window.document;
-let dimensions = require('./dimensions-setup');
+let dimensions = require('./dimensions-setup').getDimensions();
 let Car = require('./car');
 let eventBus = require('./event-bus');
-
-let dim = dimensions.dim;
-let playerPosition = ((dimensions.backgroundEntityLength -1) - dimensions.carHeight) * dim;
-
 
 class Player extends Car {
     constructor() {
         super();
         this.disableMovement = false;
-        this.y = playerPosition;
+        this.y = ((dimensions.backgroundEntityLength -1) - dimensions.carHeight) * dimensions.dim; // player position
         this.addKeyBoardEvent();
         eventBus.subscribe('pause', () => {
             this.disableMovement =  true;
@@ -34,11 +30,11 @@ class Player extends Car {
             if(!this.disableMovement) {
                 switch (evt.keyCode) {
                     case 37: //left arrow keycode
-                        this.x = dim * 2;
+                        this.x = dimensions.dim * 2;
                         eventBus.publish('playerPosition', this.x);
                         break;
                     case 39: //right arrow keycode
-                        this.x = dim * 5;
+                        this.x = dimensions.dim * 5;
                         eventBus.publish('playerPosition', this.x);
                 }
             }

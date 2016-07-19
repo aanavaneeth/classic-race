@@ -5,7 +5,8 @@
 let win = window;
 let Game = require('./game');
 let eventBus = require('./event-bus');
-let dimensions = require('./dimensions-setup');
+let dimensions;
+let dimensionsSetup = require('./dimensions-setup');
 
 
 let setupEventsForCommunication = function () {
@@ -14,7 +15,7 @@ let setupEventsForCommunication = function () {
     eventBus.addTopic('pause');
     eventBus.addTopic('continue');
     eventBus.addTopic('playerPosition');
-}
+};
 
 let setCanvasSize = (parent, stage) => {
     stage.canvas.width = dimensions.canvasWidth;
@@ -57,7 +58,7 @@ let setupGame = function (stage) {
 var setupScoreboard = function (stage) {
     let textContainer = new createjs.Container();
     let shape = new createjs.Shape();
-    shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, 40);
+    shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
     textContainer.addChild(shape);
     let text = new createjs.Text("Score 0000", "30px Aldrich", '#000');
     text.x =  dimensions.canvasWidth/4;
@@ -65,8 +66,12 @@ var setupScoreboard = function (stage) {
     stage.addChild(textContainer);
 };
 let main = () => {
+    let offsetHeight = document.getElementById('canvas-container').offsetHeight;
+    let offsetWidth = document.getElementById('canvas-container').offsetWidth;
     let stage = new createjs.Stage("myCanvas");
     setupEventsForCommunication();
+    dimensionsSetup.setupDimensions(offsetHeight, offsetWidth);
+    dimensions = dimensionsSetup.getDimensions();
     setupGame(stage);
     setupScoreboard(stage);
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
