@@ -1,6 +1,7 @@
 let cjs = createjs;
 let dimensions = require('./dimensions-setup').getDimensions();
 let eventBus = require('./event-bus');
+let speed = require('./speed');
 
 class Scoreboard extends cjs.Container {
     constructor() {
@@ -15,6 +16,7 @@ class Scoreboard extends cjs.Container {
         eventBus.subscribe('incrementScore', () => {
             this.incrementScore();
             text.text  = this.scoreText(this.score);
+            speed.setSpeed( dimensions.dim * (0.25 +  Math.floor( this.score/dimensions.levelUpScore )/20 ));
         });
     }
     incrementScore() {

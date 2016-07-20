@@ -1,6 +1,6 @@
 let cjs = createjs;
 let BackgroundEntity = require('./background');
-let Speed = require('./speed');
+let speed = require('./speed');
 let Player = require('./player');
 let Obstacles = require('./obstacles');
 let dimensions = require('./dimensions-setup').getDimensions();
@@ -9,7 +9,8 @@ let dimensions = require('./dimensions-setup').getDimensions();
 class Game extends cjs.Container {
     constructor() {
         super();
-        this.speed = new Speed(dimensions.dim * 0.25);
+        this.speed = speed;
+        this.speed.setSpeed(dimensions.dim * 0.25);
         this.backgroundQueue = [new BackgroundEntity(this.speed), new BackgroundEntity(this.speed)];
         this.backgroundQueue[1].y = -(this.backgroundQueue[1].height);
         this.player = new Player();

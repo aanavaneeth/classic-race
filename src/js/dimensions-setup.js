@@ -4,7 +4,8 @@ let backgroundEntityWidth = 10;
 let dimensions = {
     backgroundEntityLength: backgroundEntityLength,
     backgroundEntityWidth: backgroundEntityWidth,
-    carHeight: carHeight
+    carHeight: carHeight,
+    levelUpScore: 4
 };
 
 let setupDimensions = (offsetHeight, offsetWidth) => {
