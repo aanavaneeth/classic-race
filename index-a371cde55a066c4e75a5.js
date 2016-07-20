@@ -208,7 +208,7 @@
 
 	var cjs = createjs;
 	var BackgroundEntity = __webpack_require__(3);
-	var Speed = __webpack_require__(6);
+	var speed = __webpack_require__(6);
 	var Player = __webpack_require__(7);
 	var Obstacles = __webpack_require__(9);
 	var dimensions = __webpack_require__(5).getDimensions();
@@ -221,7 +221,8 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Game).call(this));
 
-	        _this.speed = new Speed(dimensions.dim * 0.25);
+	        _this.speed = speed;
+	        _this.speed.setSpeed(dimensions.dim * 0.25);
 	        _this.backgroundQueue = [new BackgroundEntity(_this.speed), new BackgroundEntity(_this.speed)];
 	        _this.backgroundQueue[1].y = -_this.backgroundQueue[1].height;
 	        _this.player = new Player();
@@ -390,7 +391,8 @@
 	var dimensions = {
 	    backgroundEntityLength: backgroundEntityLength,
 	    backgroundEntityWidth: backgroundEntityWidth,
-	    carHeight: carHeight
+	    carHeight: carHeight,
+	    levelUpScore: 4
 	};
 
 	var setupDimensions = function setupDimensions(offsetHeight, offsetWidth) {
@@ -422,17 +424,36 @@
 
 	"use strict";
 
-	module.exports = function (argSpeed) {
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	    var speed = argSpeed | 0;
-	    this.getSpeed = function () {
-	        return speed;
-	    };
-	    this.setSpeed = function (argSpeed) {
-	        speed = argSpeed;
-	        return speed;
-	    };
-	};
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Speed = function () {
+	    function Speed(argSpeed) {
+	        _classCallCheck(this, Speed);
+
+	        this.__speed = argSpeed | 0;
+	    }
+
+	    _createClass(Speed, [{
+	        key: "getSpeed",
+	        value: function getSpeed() {
+	            return this.__speed;
+	        }
+	    }, {
+	        key: "setSpeed",
+	        value: function setSpeed(argSpeed) {
+	            this.__speed = argSpeed;
+	            return this.__speed;
+	        }
+	    }]);
+
+	    return Speed;
+	}();
+
+	var speed = new Speed();
+
+	module.exports = speed;
 
 /***/ },
 /* 7 */
@@ -502,14 +523,29 @@
 	            doc.addEventListener('touchend', function (evt) {
 	                evt.preventDefault();
 	                var finalTouch = evt.changedTouches[evt.changedTouches.length - 1];
-	                var X = finalTouch.pageX;
-	                if (X <= midPointX) {
-	                    _this2.x = dimensions.dim * 2;
-	                    eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
-	                } else if (X > midPointX) {
-	                    _this2.x = dimensions.dim * 5;
-	                    eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
+	                var finalX = finalTouch.pageX;
+
+	                if (evt.changedTouches.length === 1) {
+	                    if (finalX <= midPointX) {
+	                        _this2.x = dimensions.dim * 2;
+	                        eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
+	                    } else if (finalX > midPointX) {
+	                        _this2.x = dimensions.dim * 5;
+	                        eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
+	                    }
+	                } else {
+	                    var firstTouch = evt.changedTouches[0];
+	                    var firstX = firstTouch.pageX;
+	                    var direction = finalX - firstX < 0 ? true : false;
+	                    if (direction) {
+	                        _this2.x = dimensions.dim * 2;
+	                        eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
+	                    } else {
+	                        _this2.x = dimensions.dim * 5;
+	                        eventBus.publish('playerPosition', { X: _this2.x, Y: _this2.y });
+	                    }
 	                }
+
 	                return false;
 	            });
 	        }
@@ -690,6 +726,7 @@
 	var cjs = createjs;
 	var dimensions = __webpack_require__(5).getDimensions();
 	var eventBus = __webpack_require__(4);
+	var speed = __webpack_require__(6);
 
 	var Scoreboard = function (_cjs$Container) {
 	    _inherits(Scoreboard, _cjs$Container);
@@ -709,6 +746,7 @@
 	        eventBus.subscribe('incrementScore', function () {
 	            _this.incrementScore();
 	            text.text = _this.scoreText(_this.score);
+	            speed.setSpeed(dimensions.dim * (0.25 + Math.floor(_this.score / dimensions.levelUpScore) / 20));
 	        });
 	        return _this;
 	    }
