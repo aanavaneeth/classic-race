@@ -50,6 +50,7 @@
 	var styles = __webpack_require__(1);
 	var Game = __webpack_require__(2);
 	var eventBus = __webpack_require__(4);
+	var ScoreBoard = __webpack_require__(10);
 	var dimensions = void 0;
 	var dimensionsSetup = __webpack_require__(5);
 
@@ -59,6 +60,7 @@
 	    eventBus.addTopic('pause');
 	    eventBus.addTopic('continue');
 	    eventBus.addTopic('playerPosition');
+	    eventBus.addTopic('incrementScore');
 	};
 
 	var setCanvasSize = function setCanvasSize(parent, stage) {
@@ -110,14 +112,15 @@
 	    stage.addChild(game);
 	};
 	var setupScoreboard = function setupScoreboard(stage) {
-	    var textContainer = new createjs.Container();
-	    var shape = new createjs.Shape();
-	    shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
-	    textContainer.addChild(shape);
-	    var text = new createjs.Text("Score 0000", "30px Aldrich", '#000');
-	    text.x = dimensions.canvasWidth / 4;
-	    textContainer.addChild(text);
-	    stage.addChild(textContainer);
+	    // let textContainer = new createjs.Container();
+	    // let shape = new createjs.Shape();
+	    // shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
+	    // textContainer.addChild(shape);
+	    // let text = new createjs.Text("Score 0000", "30px Aldrich", '#000');
+	    // text.x = dimensions.canvasWidth / 4;
+	    // textContainer.addChild(text);
+	    var scoreboard = new ScoreBoard();
+	    stage.addChild(scoreboard);
 	};
 
 	var hideBanners = function hideBanners() {
@@ -656,6 +659,7 @@
 	                        var position = _this2.getObstaclePosition(index + 1);
 	                        obj.y = position.y;
 	                        obj.x = position.x;
+	                        eventBus.publish('incrementScore');
 	                    }
 	                    obj.y += _this2.speed.getSpeed();
 	                });
@@ -668,6 +672,63 @@
 	}(cjs.Container);
 
 	module.exports = Obstacles;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var cjs = createjs;
+	var dimensions = __webpack_require__(5).getDimensions();
+	var eventBus = __webpack_require__(4);
+
+	var Scoreboard = function (_cjs$Container) {
+	    _inherits(Scoreboard, _cjs$Container);
+
+	    function Scoreboard() {
+	        _classCallCheck(this, Scoreboard);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Scoreboard).call(this));
+
+	        var shape = new cjs.Shape();
+	        shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
+	        _this.score = 0;
+	        var text = new createjs.Text("SCORE 0000", "30px Aldrich", '#000');
+	        text.x = dimensions.canvasWidth / 4;
+	        _this.addChild(shape);
+	        _this.addChild(text);
+	        eventBus.subscribe('incrementScore', function () {
+	            _this.incrementScore();
+	            text.text = _this.scoreText(_this.score);
+	        });
+	        return _this;
+	    }
+
+	    _createClass(Scoreboard, [{
+	        key: 'incrementScore',
+	        value: function incrementScore() {
+	            return ++this.score;
+	        }
+	    }, {
+	        key: 'scoreText',
+	        value: function scoreText(score) {
+	            return "SCORE " + score.toLocaleString('en-US', { minimumIntegerDigits: 4, useGrouping: false });
+	        }
+	    }]);
+
+	    return Scoreboard;
+	}(cjs.Container);
+
+	module.exports = Scoreboard;
 
 /***/ }
 /******/ ]);
