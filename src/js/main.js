@@ -63,13 +63,6 @@ let setupGame = function (stage) {
     stage.addChild(game);
 };
 var setupScoreboard = function (stage) {
-    // let textContainer = new createjs.Container();
-    // let shape = new createjs.Shape();
-    // shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
-    // textContainer.addChild(shape);
-    // let text = new createjs.Text("Score 0000", "30px Aldrich", '#000');
-    // text.x = dimensions.canvasWidth / 4;
-    // textContainer.addChild(text);
     let scoreboard = new ScoreBoard();
      stage.addChild(scoreboard);
 };
@@ -109,6 +102,7 @@ let main = () => {
         showBanners('end', 'banner');
         createjs.Ticker.removeAllEventListeners();
         stage.removeAllChildren();
+        stage.update();
         let game = new Game();
         stage.addChild(game);
     });
