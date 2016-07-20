@@ -2,6 +2,7 @@ let win = window;
 let styles = require('../styles.scss');
 let Game = require('./game');
 let eventBus = require('./event-bus');
+let ScoreBoard = require('./scoreboard');
 let dimensions;
 let dimensionsSetup = require('./dimensions-setup');
 
@@ -12,6 +13,7 @@ let setupEventsForCommunication = function () {
     eventBus.addTopic('pause');
     eventBus.addTopic('continue');
     eventBus.addTopic('playerPosition');
+    eventBus.addTopic('incrementScore');
 };
 
 let setCanvasSize = (parent, stage) => {
@@ -61,14 +63,15 @@ let setupGame = function (stage) {
     stage.addChild(game);
 };
 var setupScoreboard = function (stage) {
-    let textContainer = new createjs.Container();
-    let shape = new createjs.Shape();
-    shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
-    textContainer.addChild(shape);
-    let text = new createjs.Text("Score 0000", "30px Aldrich", '#000');
-    text.x = dimensions.canvasWidth / 4;
-    textContainer.addChild(text);
-    stage.addChild(textContainer);
+    // let textContainer = new createjs.Container();
+    // let shape = new createjs.Shape();
+    // shape.graphics.f('#ADBDB0').dr(0, 0, dimensions.canvasWidth, dimensions.scoreBoardHeight);
+    // textContainer.addChild(shape);
+    // let text = new createjs.Text("Score 0000", "30px Aldrich", '#000');
+    // text.x = dimensions.canvasWidth / 4;
+    // textContainer.addChild(text);
+    let scoreboard = new ScoreBoard();
+     stage.addChild(scoreboard);
 };
 
 let hideBanners = (...cssClasses) => {

@@ -75,6 +75,7 @@ class Obstacles extends cjs.Container {
                     var position = this.getObstaclePosition(index + 1);
                     obj.y = position.y;
                     obj.x = position.x;
+                    eventBus.publish('incrementScore');
                 }
                 obj.y += this.speed.getSpeed();
             });
