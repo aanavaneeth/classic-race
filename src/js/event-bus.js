@@ -51,10 +51,16 @@ let unsubscribe = (token) => {
     return false;
 };
 
+let removeAllSubscribers = () => {
+    topics = {};
+    callbackID = -1;
+};
+
 module.exports = {
     addTopic: addTopic,
     removeTopic: removeTopic,
     subscribe: subscribe,
     publish: publish,
-    unsubscribe: unsubscribe
+    unsubscribe: unsubscribe,
+    removeAllSubscribers: removeAllSubscribers
 };

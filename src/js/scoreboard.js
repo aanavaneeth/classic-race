@@ -26,6 +26,11 @@ class Scoreboard extends cjs.Container {
     scoreText(score) {
         return "SCORE " + score.toLocaleString('en-US', {minimumIntegerDigits: 4, useGrouping:false});
     }
+
+    setCanvasSize(stage, dimensions) {
+        stage.canvas.width = dimensions.canvasWidth;
+        stage.canvas.height = dimensions.canvasHeight;
+    }
 }
 
 module.exports = Scoreboard;
