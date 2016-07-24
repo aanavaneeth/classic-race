@@ -1,7 +1,6 @@
 let win = window;
 let cjs = createjs;
 let styles = require('../styles.scss');
-let Game = require('./game');
 let eventBus = require('./event-bus');
 let banners = require('./banners');
 let dimensionsSetup = require('./dimensions-setup');
@@ -64,11 +63,6 @@ let main = () => {
     handleEvents(stage);
 
     eventBus.subscribe('end', () => {
-        cjs.Ticker.removeAllEventListeners();
-        stage.removeAllChildren();
-        stage.update();
-        let game = new Game();
-        stage.addChild(game);
     });
     eventBus.subscribe('start', () => {
         win.removeEventListener('touchend', touchAndStart)
