@@ -4,6 +4,7 @@ let styles = require('../styles.scss');
 let eventBus = require('./event-bus');
 let banners = require('./banners');
 let dimensionsSetup = require('./dimensions-setup');
+let GameField = require('./game-field');
 
 
 let setupEventsForCommunication = function () {
@@ -21,13 +22,9 @@ let touchAndStart = (evt) => {
     eventBus.publish('start');
 };
 
-let handleEvents = (stage) => {
+let handleEvents = () => {
     const GAME_START = 0, GAME_RUNNING = 1, GAME_PAUSE = 2;
     let gameStatus = GAME_START;
-    let parent = win.document.getElementById('canvas-container');
-    if (cjs.Touch.isSupported()) {
-        cjs.Touch.enable(stage);
-    }
     win.addEventListener('keypress', (evt) => {
         if (evt.keyCode === 32) {
             switch (gameStatus) {
@@ -35,21 +32,18 @@ let handleEvents = (stage) => {
                     eventBus.publish('start');
                     gameStatus = GAME_RUNNING;
                     break;
-                case GAME_RUNNING:
-                    eventBus.publish('pause');
-                    gameStatus = GAME_PAUSE;
-                    break;
-                case GAME_PAUSE:
-                    eventBus.publish('continue');
-                    gameStatus = GAME_RUNNING;
-                    break;
+                // case GAME_RUNNING: //getting rid of pause functionality
+                //     eventBus.publish('pause');
+                //     gameStatus = GAME_PAUSE;
+                //     break;
+                // case GAME_PAUSE:
+                //     eventBus.publish('continue');
+                //     gameStatus = GAME_RUNNING;
+                //     break;
             }
         }
     });
     win.addEventListener('touchend', touchAndStart);
-    cjs.Ticker.on("tick", () => {
-        stage.update()
-    });
 };
 
 let main = () => {
@@ -59,14 +53,14 @@ let main = () => {
     dimensionsSetup.setupDimensions(offsetHeight, offsetWidth);
     cjs.Ticker.timingMode = cjs.Ticker.RAF;
     banners.getInstance();
-
-    handleEvents(stage);
+    handleEvents();
 
     eventBus.subscribe('end', () => {
     });
     eventBus.subscribe('start', () => {
         win.removeEventListener('touchend', touchAndStart)
     });
+    var gameField = new GameField();
 };
 
 win.addEventListener("load", function () {

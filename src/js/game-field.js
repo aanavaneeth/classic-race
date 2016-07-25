@@ -10,7 +10,7 @@ class GameField {
         this.setupGame(this.stage);
         this.setupScoreboard(this.stage);
         this.setCanvasSize(this.stage, dimensions);
-
+        this.updateStage(this.stage);
         eventBus.subscribe('end', () => {
             cjs.Ticker.removeAllEventListeners();
             this.stage.removeAllChildren();
@@ -30,6 +30,15 @@ class GameField {
     setCanvasSize(stage, dimensions) {
         stage.canvas.width = dimensions.canvasWidth;
         stage.canvas.height = dimensions.canvasHeight;
+    }
+
+    updateStage(stage) {
+        if (cjs.Touch.isSupported()) {
+            cjs.Touch.enable(stage);
+        }
+        cjs.Ticker.on("tick", () => {
+            stage.update()
+        });
     }
 }
 
